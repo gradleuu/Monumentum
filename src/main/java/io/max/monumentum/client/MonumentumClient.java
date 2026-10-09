@@ -6,6 +6,7 @@ import io.max.monumentum.Monumentum;
 import io.max.monumentum.api.MonumentumApi;
 import io.max.monumentum.api.MonumentumEntrypoint;
 import io.max.monumentum.api.shard.ShardApi;
+import io.max.monumentum.command.ShardCommand;
 import io.max.monumentum.data.ApiHost;
 import io.max.monumentum.data.ShardCatalog;
 import io.max.monumentum.data.SourceRegistry;
@@ -62,7 +63,11 @@ public final class MonumentumClient implements ClientModInitializer {
     WorldWatcher world = new WorldWatcher();
     TablistWatcher tablist = new TablistWatcher();
 
-    MonumentumApi.register(ShardApi.class, ShardService.create(catalog, world, tablist));
+    ShardApi shardApi = ShardService.create(catalog, world, tablist);
+
+    MonumentumApi.register(ShardApi.class, shardApi);
+    // 🍝
+    ShardCommand.register(shardApi);
 
     world.register();
     tablist.register();
