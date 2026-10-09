@@ -5,17 +5,17 @@ import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 
 /**
- * Called once each time the player arrives in a shard, after everything about it is known.
+ * Called once each time the player transfers in a shard, after everything about it is known.
  *
  * <p>Unlike {@link ShardChangeCallback}, it is not called for the in-between steps of a shard
- * switch. It is called once the shard, the shard number and the world are all known ({@link
- * ShardContext#isComplete()}), which is about a second after the player transfers.
- *
- * <p>If the shard number never becomes known, this is not called for that arrival. Use {@link
- * ShardChangeCallback} if you only need the shard and not it's number.
+ * switch. It is called once the shard, the shard number and the world are all known {@link
+ * ShardContext#isComplete()}, which is about a ~1 second after the player transfers.
  *
  * @apiNote
  *     <p>Every call to {@link ShardLeaveCallback} is matched with an earlier call to this event.
+ * @implNote
+ *     <p>If the shard number never becomes known, this is not called for that shard transfer. Use
+ *     {@link ShardChangeCallback} if you only need the shard and not it's number.
  */
 @FunctionalInterface
 public interface ShardEnterCallback {
