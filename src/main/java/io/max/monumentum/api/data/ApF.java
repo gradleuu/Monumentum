@@ -1,11 +1,11 @@
 package io.max.monumentum.api.data;
 
-public enum ApiFile {
+public enum ApF {
   SHARDS("shards.json");
 
   private final String fileName;
 
-  ApiFile(String fileName) {
+  ApF(String fileName) {
     this.fileName = fileName;
   }
 

@@ -1,6 +1,6 @@
 package io.max.monumentum.data;
 
-import io.max.monumentum.api.data.ApiFile;
+import io.max.monumentum.api.data.ApF;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,7 @@ public final class ApiHost {
    * @param file Path relative to the base, e.g. {@code shards.json}
    */
   public <T> Dataset<T> dataset(
-      ApiFile file, T empty, Function<String, T> decoder, Executor callbackExecutor) {
+      ApF file, T empty, Function<String, T> decoder, Executor callbackExecutor) {
     List<Feed> feeds = new ArrayList<>();
     sources.before(file).forEach(u -> feeds.add(new RemoteFeed(u)));
     feeds.add(new RemoteFeed(base.resolve(file.fileName())));

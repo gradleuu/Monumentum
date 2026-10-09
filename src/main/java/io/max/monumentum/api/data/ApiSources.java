@@ -16,7 +16,7 @@ public interface ApiSources {
    *     your file is missing shards that then will be resolved by Monumentum - those shards will be
    *     unknown.
    */
-  void prepend(ApiFile file, URI uri);
+  void prepend(ApF file, URI uri);
 
   /**
    * Adds a source that is tried <b>after</b> Monumentum's own server, but before the built-in copy.
@@ -26,5 +26,5 @@ public interface ApiSources {
    * @throws IllegalArgumentException if the address is not an {@code https://} address
    * @implNote Use this for backup copies.
    */
-  void append(ApiFile file, URI uri);
+  void append(ApF file, URI uri);
 }

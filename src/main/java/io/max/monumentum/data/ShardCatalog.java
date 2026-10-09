@@ -4,7 +4,7 @@ import static io.max.monumentum.Monumentum.LOGGER;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import io.max.monumentum.api.data.ApiFile;
+import io.max.monumentum.api.data.ApF;
 import io.max.monumentum.api.shard.Shard;
 import io.max.monumentum.api.shard.ShardType;
 import java.util.Collection;
@@ -26,7 +26,7 @@ public final class ShardCatalog {
   private final Dataset<Map<String, Shard>> dataset;
 
   public ShardCatalog(ApiHost host, Executor callbackExecutor) {
-    this.dataset = host.dataset(ApiFile.SHARDS, Map.of(), ShardCatalog::decode, callbackExecutor);
+    this.dataset = host.dataset(ApF.SHARDS, Map.of(), ShardCatalog::decode, callbackExecutor);
   }
 
   public Shard byId(String id) {

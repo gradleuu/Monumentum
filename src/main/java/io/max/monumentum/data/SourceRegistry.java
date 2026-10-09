@@ -2,7 +2,7 @@ package io.max.monumentum.data;
 
 import static io.max.monumentum.Monumentum.LOGGER;
 
-import io.max.monumentum.api.data.ApiFile;
+import io.max.monumentum.api.data.ApF;
 import io.max.monumentum.api.data.ApiSources;
 import java.net.URI;
 import java.util.ArrayList;
@@ -14,19 +14,19 @@ import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
 public final class SourceRegistry {
-  private final Map<ApiFile, List<URI>> before = new EnumMap<>(ApiFile.class);
-  private final Map<ApiFile, List<URI>> after = new EnumMap<>(ApiFile.class);
+  private final Map<ApF, List<URI>> before = new EnumMap<>(ApF.class);
+  private final Map<ApF, List<URI>> after = new EnumMap<>(ApF.class);
   private boolean frozen;
 
   public ApiSources forMod(String modId) {
     return new ApiSources() {
       @Override
-      public void prepend(ApiFile file, URI uri) {
+      public void prepend(ApF file, URI uri) {
         add(before, "before", modId, file, uri);
       }
 
       @Override
-      public void append(ApiFile file, URI uri) {
+      public void append(ApF file, URI uri) {
         add(after, "after", modId, file, uri);
       }
     };
@@ -36,16 +36,16 @@ public final class SourceRegistry {
     frozen = true;
   }
 
-  public List<URI> before(ApiFile file) {
+  public List<URI> before(ApF file) {
     return List.copyOf(before.getOrDefault(file, List.of()));
   }
 
-  public List<URI> after(ApiFile file) {
+  public List<URI> after(ApF file) {
     return List.copyOf(after.getOrDefault(file, List.of()));
   }
 
   private void add(
-      Map<ApiFile, List<URI>> target, String where, String modId, ApiFile file, URI uri) {
+      Map<ApF, List<URI>> target, String where, String modId, ApF file, URI uri) {
     Objects.requireNonNull(file, "file");
     Objects.requireNonNull(uri, "uri");
     if (frozen) {
