@@ -1,0 +1,17 @@
+{
+  "providers": [
+    {
+      "advances": {
+        " ": 4,
+        "\u200F": 2,
+        "\u200D": -1,
+        "\u200E": -4
+      },
+      "type": "space"
+    },
+    {
+      "type": "reference",
+      "id": "minecraft:default"
+    }
+  ]
+}
