@@ -24,18 +24,16 @@ public final class MonumentumClient implements ClientModInitializer {
 
   @Override
   public void onInitializeClient() {
-    try {
-      initShards(MinecraftClient.getInstance());
-    } catch (RuntimeException e) {
-      LOGGER.error("Shards failed to init", e);
-    }
+    initShards(MinecraftClient.getInstance());
   }
 
   private static ApiHost createHost() {
     SourceRegistry sources = new SourceRegistry();
 
     // sorted by mod id so the order of sources is the same on every run
-    FabricLoader.getInstance().getEntrypointContainers(Monumentum.MOD_ID, MonumentumEntrypoint.class).stream()
+    FabricLoader.getInstance()
+        .getEntrypointContainers(Monumentum.MOD_ID, MonumentumEntrypoint.class)
+        .stream()
         .sorted(
             Comparator.comparing(
                 (EntrypointContainer<MonumentumEntrypoint> c) ->
