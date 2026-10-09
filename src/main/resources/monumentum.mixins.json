@@ -1,16 +1,15 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "io.max.monumentum.mixin",
+  "package": "io.max.monumentum.client.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
   ],
   "client": [
+    "MinecraftClientMixin",
+    "PlayerListHudMixin"
   ],
   "injectors": {
     "defaultRequire": 1
-  },
-  "overwrites": {
-    "requireAnnotations": true
   }
 }

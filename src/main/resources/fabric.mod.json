@@ -3,11 +3,16 @@
   "id": "monumentum",
   "version": "${version}",
   "name": "Monumentum",
-  "description": "",
-  "authors": [],
-  "contact": {},
+  "description": "An unofficial, client-side utility mod for the Monumenta MMORPG server",
+  "authors": [
+    "Max Panicle"
+  ],
+  "contact": {
+    "repo": "https://github.com/gradleuu/Monumentum"
+  },
   "license": "BSD-3-Clause",
   "icon": "assets/monumentum/icon.png",
+  "accessWidener": "monumentum.accesswidener",
   "environment": "client",
   "entrypoints": {
     "client": [
@@ -22,7 +27,7 @@
   ],
   "depends": {
     "fabricloader": ">=${loader_version}",
-    "fabric-api": "*",
+    "fabric-api": ">=0.97.3",
     "minecraft": "${minecraft_version}"
   }
 }

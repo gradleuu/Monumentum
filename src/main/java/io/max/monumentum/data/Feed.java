@@ -1,4 +1,7 @@
 package io.max.monumentum.data;
 
-public class Feed {
+import java.util.concurrent.CompletableFuture;
+
+public interface Feed {
+	CompletableFuture<String> fetch();
 }

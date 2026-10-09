@@ -1,0 +1,17 @@
+[versions]
+minecraft = "1.20.4"
+yarn-mappings = "1.20.4+build.3"
+devauth = "1.2.2"
+fabric-loader = "0.18.4"
+fabric-loom = "1.13.6"
+fabric-api = "0.97.3+1.20.4"
+modmenu = "9.2.0-beta.2"
+
+[libraries]
+fabric-loader = { module = "net.fabricmc:fabric-loader", version.ref = "fabric-loader" }
+fabric-api = { module = "net.fabricmc.fabric-api:fabric-api", version.ref = "fabric-api" }
+modmenu = { module = "com.terraformersmc:modmenu", version.ref = "modmenu" }
+devauth = { module = "me.djtheredstoner:DevAuth-fabric", version.ref = "devauth" }
+
+[plugins]
+fabric-loom = { id = "fabric-loom", version.ref = "fabric-loom" }
