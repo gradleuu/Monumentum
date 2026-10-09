@@ -26,23 +26,24 @@ public final class ShardCommand {
                                     command
                                         .getSource()
                                         .sendFeedback(
-                                            Text.literal("Current shard is not known yet."));
+                                            Text.translatable(
+                                                "monumentum.command.shard.unavailable"));
                                     return 0;
                                   }
 
-                                  String instance =
+                                  Text instance =
                                       ShardId.UNKNOWN.equals(context.shardId())
-                                          ? "unknown"
-                                          : String.valueOf(context.shardId().instance());
+                                          ? Text.translatable("monumentum.command.shard.unknown")
+                                          : Text.literal(
+                                              String.valueOf(context.shardId().instance()));
 
                                   command
                                       .getSource()
                                       .sendFeedback(
-                                          Text.literal(
-                                              "shard="
-                                                  + context.shard().id()
-                                                  + ";instance="
-                                                  + instance));
+                                          Text.translatable(
+                                              "monumentum.command.shard.current",
+                                              context.shard().id(),
+                                              instance));
 
                                   return 1;
                                 }))));

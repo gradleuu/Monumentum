@@ -1,0 +1,8 @@
+{
+  "monumentum.name": "Monumentum",
+  "monumentum.keybinds_category_name": "%s",
+  "monumentum.ahtung": "This %s was %s by %s.",
+  "monumentum.command.shard.unavailable": "shard is not known yet",
+  "monumentum.command.shard.unknown": "shard=unknown",
+  "monumentum.command.shard.current": "shard=%s;instance=%s"
+}
