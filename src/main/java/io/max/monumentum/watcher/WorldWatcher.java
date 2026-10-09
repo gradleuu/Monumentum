@@ -7,8 +7,6 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.client.world.ClientWorld;
 import org.jetbrains.annotations.Nullable;
 
-import static io.max.monumentum.Monumentum.LOGGER;
-
 public final class WorldWatcher extends Signal<WorldId> {
   public WorldWatcher() {
     super(WorldId.UNKNOWN);
