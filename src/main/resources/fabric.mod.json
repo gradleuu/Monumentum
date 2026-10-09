@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "monumentum",
+  "version": "${version}",
+  "name": "Monumentum",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "BSD-3-Clause",
+  "icon": "assets/monumentum/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "io.max.monumentum.client.MonumentumClient"
+    ],
+    "main": [
+      "io.max.monumentum.Monumentum"
+    ]
+  },
+  "mixins": [
+    "monumentum.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric-api": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
