@@ -4,5 +4,5 @@
   "monumentum.ahtung": "This %s was %s by %s.",
   "monumentum.command.shard.unavailable": "shard is not known yet",
   "monumentum.command.shard.unknown": "shard=unknown",
-  "monumentum.command.shard.current": "shard=%s;instance=%s"
+  "monumentum.command.shard.current": "shard=%s;instance=%s;worldName=%s;worldInstance=%s"
 }

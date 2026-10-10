@@ -43,7 +43,9 @@ public final class ShardCommand {
                                           Text.translatable(
                                               "monumentum.command.shard.current",
                                               context.shard().id(),
-                                              instance));
+                                              instance,
+                                              context.world().name(),
+                                              context.world().instance()));
 
                                   return 1;
                                 }))));
