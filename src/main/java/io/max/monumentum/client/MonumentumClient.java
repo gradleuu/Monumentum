@@ -5,9 +5,12 @@ import static io.max.monumentum.Monumentum.LOGGER;
 import io.max.monumentum.Monumentum;
 import io.max.monumentum.api.MonumentumApi;
 import io.max.monumentum.api.MonumentumEntrypoint;
+import io.max.monumentum.api.data.ApF;
+import io.max.monumentum.api.data.ApiSources;
 import io.max.monumentum.api.shard.ShardApi;
 import io.max.monumentum.command.ShardCommand;
 import io.max.monumentum.data.ApiHost;
+import io.max.monumentum.data.ApiLocation;
 import io.max.monumentum.data.ShardCatalog;
 import io.max.monumentum.data.SourceRegistry;
 import io.max.monumentum.service.ShardService;
@@ -15,20 +18,19 @@ import io.max.monumentum.watcher.TablistWatcher;
 import io.max.monumentum.watcher.WorldWatcher;
 import java.net.URI;
 import java.util.Comparator;
+import java.util.List;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.minecraft.client.MinecraftClient;
 
 public final class MonumentumClient implements ClientModInitializer {
-  private static final String DEFAULT_API = "https://gradleuu.github.io/api/monumentum/";
-
   @Override
   public void onInitializeClient() {
     initShards(MinecraftClient.getInstance());
   }
 
-  private static ApiHost createHost() {
+  private static ApiHost createHost(String baseUrlOverride, List<String> shardMirrors) {
     SourceRegistry sources = new SourceRegistry();
 
     // sorted by mod id so the order of sources is the same on every run
@@ -51,14 +53,22 @@ public final class MonumentumClient implements ClientModInitializer {
     sources.freeze();
 
     // -Dmonumentum.api=http://localhost:8080/ points a dev client at a local server
-    return new ApiHost(
-        URI.create(System.getProperty("monumentum.api", DEFAULT_API)),
-        "/data/monumentum/",
-        sources);
+    ApiSources user = sources.forMod("monumentum-config");
+    for (String mirror : shardMirrors) {
+      try {
+        user.append(ApF.SHARDS, URI.create(mirror.trim()));
+      } catch (IllegalArgumentException e) { // not https, or not a valid address
+        LOGGER.warn("Ignoring invalid shard mirror in config: {}", mirror);
+      }
+    }
+    sources.freeze();
+
+    return new ApiHost(ApiLocation.resolve(baseUrlOverride), "/data/monumentum/", sources);
   }
 
   private static void initShards(MinecraftClient mc) {
-    ApiHost host = createHost();
+    ApiHost host =
+        createHost(Monumentum.CONFIG.api.baseUrl(), Monumentum.CONFIG.api.shardMirrors());
     ShardCatalog catalog = new ShardCatalog(host, mc);
     WorldWatcher world = new WorldWatcher();
     TablistWatcher tablist = new TablistWatcher();
