@@ -31,14 +31,26 @@ public final class MonumentumApi {
     return Optional.ofNullable(type.cast(SERVICES.get(type)));
   }
 
+  /**
+   * @return the shards service, never {@code null}
+   * @throws IllegalStateException if Monumentum has not started yet
+   */
   public static ShardApi shards() {
     return get(ShardApi.class);
   }
 
+  /**
+   * @return the strikes service, never {@code null}
+   * @throws IllegalStateException if Monumentum has not started yet
+   */
   public static StrikeApi strikes() {
     return get(StrikeApi.class);
   }
 
+  /**
+   * @return the server information service, never {@code null}
+   * @throws IllegalStateException if Monumentum has not started yet
+   */
   public static ServerInfoApi serverInfo() {
     return get(ServerInfoApi.class);
   }
