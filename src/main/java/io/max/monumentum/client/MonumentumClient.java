@@ -8,12 +8,18 @@ import io.max.monumentum.api.MonumentumEntrypoint;
 import io.max.monumentum.api.data.ApF;
 import io.max.monumentum.api.data.ApiSources;
 import io.max.monumentum.api.shard.ShardApi;
+import io.max.monumentum.api.shard.event.ShardChangeCallback;
+import io.max.monumentum.api.shard.event.ShardEnterCallback;
+import io.max.monumentum.api.shard.event.ShardLeaveCallback;
 import io.max.monumentum.command.ShardCommand;
 import io.max.monumentum.data.ApiHost;
 import io.max.monumentum.data.ApiLocation;
 import io.max.monumentum.data.ShardCatalog;
 import io.max.monumentum.data.SourceRegistry;
+import io.max.monumentum.net.ClientChannel;
+import io.max.monumentum.net.MessageRouter;
 import io.max.monumentum.service.ShardService;
+import io.max.monumentum.watcher.LocationWatcher;
 import io.max.monumentum.watcher.TablistWatcher;
 import io.max.monumentum.watcher.WorldWatcher;
 import java.net.URI;
@@ -27,7 +33,10 @@ import net.minecraft.client.MinecraftClient;
 public final class MonumentumClient implements ClientModInitializer {
   @Override
   public void onInitializeClient() {
-    initShards(MinecraftClient.getInstance());
+    MessageRouter router = new MessageRouter();
+    new ClientChannel(router).start();
+
+    initShards(MinecraftClient.getInstance(), router);
   }
 
   private static ApiHost createHost(String baseUrlOverride, List<String> shardMirrors) {
@@ -50,7 +59,6 @@ public final class MonumentumClient implements ClientModInitializer {
                 LOGGER.error("Mod '{}' failed in its monumentum entrypoint", modId, e);
               }
             });
-    sources.freeze();
 
     // -Dmonumentum.api=http://localhost:8080/ points a dev client at a local server
     ApiSources user = sources.forMod("monumentum-config");
@@ -66,20 +74,22 @@ public final class MonumentumClient implements ClientModInitializer {
     return new ApiHost(ApiLocation.resolve(baseUrlOverride), "/data/monumentum/", sources);
   }
 
-  private static void initShards(MinecraftClient mc) {
+  private static void initShards(MinecraftClient mc, MessageRouter router) {
     ApiHost host =
         createHost(Monumentum.CONFIG.api.baseUrl(), Monumentum.CONFIG.api.shardMirrors());
     ShardCatalog catalog = new ShardCatalog(host, mc);
     WorldWatcher world = new WorldWatcher();
+    LocationWatcher location = new LocationWatcher();
     TablistWatcher tablist = new TablistWatcher();
 
-    ShardApi shardApi = ShardService.create(catalog, world, tablist);
+    ShardApi shardApi = ShardService.create(catalog, world, location, tablist);
 
     MonumentumApi.register(ShardApi.class, shardApi);
     // 🍝
     ShardCommand.register(shardApi);
 
     world.register();
+    location.register(router);
     tablist.register();
     catalog
         .load()

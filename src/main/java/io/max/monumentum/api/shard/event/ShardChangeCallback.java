@@ -5,13 +5,20 @@ import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 
 /**
- * Called when the shard, the shard number or the world changes, or when the shard list finishes
- * loading and a shard becomes <i>known</i>.
+ * Called when the shard, shard number, or world changes, or when the shard list finishes loading
+ * and a shard becomes <i>known</i>.
  *
  * @apiNote
- *     <p>It can be called twice for one shard switch. The world changes first. The tablist follows
- *     a moment later and can change the shard number. Compare {@code previous} and {@code current}
- *     to see what changed.
+ *     <p>A shard switch usually triggers this twice: first when the player leaves and the context
+ *     becomes {@code UNKNOWN}, then when the new shard is known. On first join, the world may
+ *     appear before the shard is identified, causing an extra update.
+ *     <p>World changes within the same shard also trigger this. Compare {@code previous} and {@code
+ *     current} to see what changed.
+ * @implNote
+ *     <p>Most mods only need {@link ShardEnterCallback} and {@link ShardLeaveCallback}. Use this
+ *     callback to observe every intermediate change.
+ *     <p>When events occur together, this callback runs first, followed by the leave and enter
+ *     callbacks.
  */
 @FunctionalInterface
 public interface ShardChangeCallback {
