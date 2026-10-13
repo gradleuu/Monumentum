@@ -1,5 +1,6 @@
 package io.max.monumentum.util;
 
+import io.max.monumentum.Monumentum;
 import java.util.function.Consumer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import org.jetbrains.annotations.Nullable;
@@ -30,6 +31,10 @@ public final class TickCoalescer<T> {
       return;
     }
     pending = null;
-    sink.accept(value);
+    try {
+      sink.accept(value);
+    } catch (RuntimeException e) {
+      Monumentum.LOGGER.error("Tick handler failed", e);
+    }
   }
 }
