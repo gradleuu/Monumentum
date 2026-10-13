@@ -1,5 +1,6 @@
 package io.max.monumentum.api;
 
+import io.max.monumentum.api.effect.EffectApi;
 import io.max.monumentum.api.server.ServerInfoApi;
 import io.max.monumentum.api.shard.ShardApi;
 import io.max.monumentum.api.strike.StrikeApi;
@@ -40,6 +41,14 @@ public final class MonumentumApi {
 
   public static ServerInfoApi serverInfo() {
     return get(ServerInfoApi.class);
+  }
+
+  /**
+   * @return the effect service, never {@code null}
+   * @throws IllegalStateException if Monumentum has not started yet
+   */
+  public static EffectApi effects() {
+    return get(EffectApi.class);
   }
 
   @ApiStatus.Internal
