@@ -8,7 +8,6 @@ import io.max.monumentum.api.MonumentumEntrypoint;
 import io.max.monumentum.api.data.ApF;
 import io.max.monumentum.api.data.ApiSources;
 import io.max.monumentum.api.effect.EffectApi;
-import io.max.monumentum.api.effect.event.EffectsChangeCallback;
 import io.max.monumentum.api.server.ServerInfoApi;
 import io.max.monumentum.api.shard.ShardApi;
 import io.max.monumentum.api.strike.StrikeApi;
