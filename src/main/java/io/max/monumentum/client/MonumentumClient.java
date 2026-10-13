@@ -7,6 +7,7 @@ import io.max.monumentum.api.MonumentumApi;
 import io.max.monumentum.api.MonumentumEntrypoint;
 import io.max.monumentum.api.data.ApF;
 import io.max.monumentum.api.data.ApiSources;
+import io.max.monumentum.api.server.ServerInfoApi;
 import io.max.monumentum.api.shard.ShardApi;
 import io.max.monumentum.api.strike.StrikeApi;
 import io.max.monumentum.command.ShardCommand;
@@ -16,6 +17,7 @@ import io.max.monumentum.data.ShardCatalog;
 import io.max.monumentum.data.SourceRegistry;
 import io.max.monumentum.net.ClientChannel;
 import io.max.monumentum.net.MessageRouter;
+import io.max.monumentum.service.ServerInfoService;
 import io.max.monumentum.service.ShardService;
 import io.max.monumentum.service.StrikeChestService;
 import io.max.monumentum.watcher.LocationWatcher;
@@ -34,6 +36,8 @@ public final class MonumentumClient implements ClientModInitializer {
   public void onInitializeClient() {
     MessageRouter router = new MessageRouter();
     new ClientChannel(router).start();
+
+    MonumentumApi.register(ServerInfoApi.class, ServerInfoService.create(router));
 
     initShards(MinecraftClient.getInstance(), router);
   }

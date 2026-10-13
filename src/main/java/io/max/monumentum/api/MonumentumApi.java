@@ -1,5 +1,6 @@
 package io.max.monumentum.api;
 
+import io.max.monumentum.api.server.ServerInfoApi;
 import io.max.monumentum.api.shard.ShardApi;
 import io.max.monumentum.api.strike.StrikeApi;
 import java.util.Map;
@@ -35,6 +36,10 @@ public final class MonumentumApi {
 
   public static StrikeApi strikes() {
     return get(StrikeApi.class);
+  }
+
+  public static ServerInfoApi serverInfo() {
+    return get(ServerInfoApi.class);
   }
 
   @ApiStatus.Internal
