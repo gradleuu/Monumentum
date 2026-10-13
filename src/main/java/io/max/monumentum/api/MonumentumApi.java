@@ -1,6 +1,7 @@
 package io.max.monumentum.api;
 
 import io.max.monumentum.api.shard.ShardApi;
+import io.max.monumentum.api.strike.StrikeApi;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -30,6 +31,10 @@ public final class MonumentumApi {
 
   public static ShardApi shards() {
     return get(ShardApi.class);
+  }
+
+  public static StrikeApi strikes() {
+    return get(StrikeApi.class);
   }
 
   @ApiStatus.Internal

@@ -8,9 +8,7 @@ import io.max.monumentum.api.MonumentumEntrypoint;
 import io.max.monumentum.api.data.ApF;
 import io.max.monumentum.api.data.ApiSources;
 import io.max.monumentum.api.shard.ShardApi;
-import io.max.monumentum.api.shard.event.ShardChangeCallback;
-import io.max.monumentum.api.shard.event.ShardEnterCallback;
-import io.max.monumentum.api.shard.event.ShardLeaveCallback;
+import io.max.monumentum.api.strike.StrikeApi;
 import io.max.monumentum.command.ShardCommand;
 import io.max.monumentum.data.ApiHost;
 import io.max.monumentum.data.ApiLocation;
@@ -19,6 +17,7 @@ import io.max.monumentum.data.SourceRegistry;
 import io.max.monumentum.net.ClientChannel;
 import io.max.monumentum.net.MessageRouter;
 import io.max.monumentum.service.ShardService;
+import io.max.monumentum.service.StrikeChestService;
 import io.max.monumentum.watcher.LocationWatcher;
 import io.max.monumentum.watcher.TablistWatcher;
 import io.max.monumentum.watcher.WorldWatcher;
@@ -82,11 +81,12 @@ public final class MonumentumClient implements ClientModInitializer {
     LocationWatcher location = new LocationWatcher();
     TablistWatcher tablist = new TablistWatcher();
 
-    ShardApi shardApi = ShardService.create(catalog, world, location, tablist);
+    ShardService shards = ShardService.create(catalog, world, location, tablist);
 
-    MonumentumApi.register(ShardApi.class, shardApi);
+    MonumentumApi.register(ShardApi.class, shards);
     // 🍝
-    ShardCommand.register(shardApi);
+    ShardCommand.register(shards);
+    MonumentumApi.register(StrikeApi.class, StrikeChestService.create(shards, router));
 
     world.register();
     location.register(router);
