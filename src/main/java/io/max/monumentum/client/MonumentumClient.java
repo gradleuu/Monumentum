@@ -5,12 +5,15 @@ import static io.max.monumentum.Monumentum.LOGGER;
 import io.max.monumentum.Monumentum;
 import io.max.monumentum.api.MonumentumApi;
 import io.max.monumentum.api.MonumentumEntrypoint;
+import io.max.monumentum.api.ability.AbilityApi;
 import io.max.monumentum.api.data.ApF;
 import io.max.monumentum.api.data.ApiSources;
 import io.max.monumentum.api.effect.EffectApi;
 import io.max.monumentum.api.playerclass.ClassApi;
 import io.max.monumentum.api.server.ServerInfoApi;
 import io.max.monumentum.api.shard.ShardApi;
+import io.max.monumentum.api.status.StatusApi;
+import io.max.monumentum.api.status.event.StatusChangeCallback;
 import io.max.monumentum.api.strike.StrikeApi;
 import io.max.monumentum.command.ShardCommand;
 import io.max.monumentum.data.ApiHost;
@@ -19,10 +22,12 @@ import io.max.monumentum.data.ShardCatalog;
 import io.max.monumentum.data.SourceRegistry;
 import io.max.monumentum.net.ClientChannel;
 import io.max.monumentum.net.MessageRouter;
+import io.max.monumentum.service.AbilityService;
 import io.max.monumentum.service.ClassService;
 import io.max.monumentum.service.EffectService;
 import io.max.monumentum.service.ServerInfoService;
 import io.max.monumentum.service.ShardService;
+import io.max.monumentum.service.StatusService;
 import io.max.monumentum.service.StrikeChestService;
 import io.max.monumentum.watcher.LocationWatcher;
 import io.max.monumentum.watcher.TablistWatcher;
@@ -44,7 +49,10 @@ public final class MonumentumClient implements ClientModInitializer {
     MonumentumApi.register(ServerInfoApi.class, ServerInfoService.create(router));
     MonumentumApi.register(EffectApi.class, EffectService.create(router));
     MonumentumApi.register(ClassApi.class, ClassService.create(router));
+    MonumentumApi.register(AbilityApi.class, AbilityService.create(router));
+    MonumentumApi.register(StatusApi.class, StatusService.create(router));
     initShards(MinecraftClient.getInstance(), router);
+    StatusChangeCallback.EVENT.register(c -> LOGGER.info("[SPIKE] status {} {}", c.kind(), c.status()));
   }
 
   private static ApiHost createHost(String baseUrlOverride, List<String> shardMirrors) {

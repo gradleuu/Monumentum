@@ -2,6 +2,7 @@ package io.max.monumentum.api.playerclass;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * The player's class, and the abilities that the server tells.
@@ -23,6 +24,14 @@ public record ClassInfo(String name, List<AbilityInfo> abilities) {
   public ClassInfo {
     Objects.requireNonNull(name, "name");
     abilities = List.copyOf(abilities);
+  }
+
+  /**
+   * @param name the ability's name
+   * @return the fixed information about that ability, or empty if the player does not have it
+   */
+  public Optional<AbilityInfo> ability(String name) {
+    return abilities.stream().filter(a -> a.name().equals(name)).findFirst();
   }
 
   /**

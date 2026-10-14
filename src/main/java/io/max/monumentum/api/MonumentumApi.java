@@ -1,9 +1,11 @@
 package io.max.monumentum.api;
 
+import io.max.monumentum.api.ability.AbilityApi;
 import io.max.monumentum.api.effect.EffectApi;
 import io.max.monumentum.api.playerclass.ClassApi;
 import io.max.monumentum.api.server.ServerInfoApi;
 import io.max.monumentum.api.shard.ShardApi;
+import io.max.monumentum.api.status.StatusApi;
 import io.max.monumentum.api.strike.StrikeApi;
 import java.util.Map;
 import java.util.Objects;
@@ -70,6 +72,22 @@ public final class MonumentumApi {
    */
   public static ClassApi playerClass() {
     return get(ClassApi.class);
+  }
+
+  /**
+   * @return the ability service, never {@code null}
+   * @throws IllegalStateException if Monumentum has not started yet
+   */
+  public static AbilityApi abilities() {
+    return get(AbilityApi.class);
+  }
+
+  /**
+   * @return the status service, never {@code null}
+   * @throws IllegalStateException if Monumentum has not started yet
+   */
+  public static StatusApi status() {
+    return get(StatusApi.class);
   }
 
   @ApiStatus.Internal
