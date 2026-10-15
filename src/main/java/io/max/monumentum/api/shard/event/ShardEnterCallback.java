@@ -25,8 +25,9 @@ public interface ShardEnterCallback {
    * Registers listeners for completed shard transfer:
    *
    * <pre>{@code
-   * ShardEnterCallback.EVENT.register(context -> {
-   *    // do something
+   * ShardEnterCallback.EVENT.register(
+   * (context) -> {
+   * // do something
    * });
    * }</pre>
    */

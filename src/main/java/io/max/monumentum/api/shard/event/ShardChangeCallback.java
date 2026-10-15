@@ -26,8 +26,9 @@ public interface ShardChangeCallback {
    * Registers listeners for shard change:
    *
    * <pre>{@code
-   * ShardChangeCallback.EVENT.register(previous, current -> {
-   *    // do something
+   * ShardChangeCallback.EVENT.register(
+   * (previous, current) -> {
+   * // do something
    * });
    * }</pre>
    */

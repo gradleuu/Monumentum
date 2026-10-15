@@ -22,8 +22,9 @@ public interface ShardLeaveCallback {
    * Registers listeners for shard "departures":
    *
    * <pre>{@code
-   * ShardLeaveCallback.EVENT.register(context -> {
-   *    // do something
+   * ShardLeaveCallback.EVENT.register(
+   * (context) -> {
+   * // do something
    * });
    * }</pre>
    */
