@@ -15,6 +15,9 @@
   "accessWidener": "monumentum.accesswidener",
   "environment": "client",
   "entrypoints": {
+    "modmenu": [
+      "io.max.monumentum.config.MonumentumModMenu"
+    ],
     "client": [
       "io.max.monumentum.client.MonumentumClient"
     ],

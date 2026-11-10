@@ -13,13 +13,15 @@ import io.max.monumentum.api.playerclass.ClassApi;
 import io.max.monumentum.api.server.ServerInfoApi;
 import io.max.monumentum.api.shard.ShardApi;
 import io.max.monumentum.api.status.StatusApi;
-import io.max.monumentum.api.status.event.StatusChangeCallback;
 import io.max.monumentum.api.strike.StrikeApi;
 import io.max.monumentum.command.ShardCommand;
+import io.max.monumentum.config.screen.MonumentumConfigScreen;
 import io.max.monumentum.data.ApiHost;
 import io.max.monumentum.data.ApiLocation;
 import io.max.monumentum.data.ShardCatalog;
 import io.max.monumentum.data.SourceRegistry;
+import io.max.monumentum.feature.Features;
+import io.max.monumentum.hud.MonumentumHud;
 import io.max.monumentum.net.ClientChannel;
 import io.max.monumentum.net.MessageRouter;
 import io.max.monumentum.service.AbilityService;
@@ -29,6 +31,7 @@ import io.max.monumentum.service.ServerInfoService;
 import io.max.monumentum.service.ShardService;
 import io.max.monumentum.service.StatusService;
 import io.max.monumentum.service.StrikeChestService;
+import io.max.monumentum.util.Ticker;
 import io.max.monumentum.watcher.LocationWatcher;
 import io.max.monumentum.watcher.TablistWatcher;
 import io.max.monumentum.watcher.WorldWatcher;
@@ -36,13 +39,19 @@ import java.net.URI;
 import java.util.Comparator;
 import java.util.List;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.util.InputUtil;
+import org.lwjgl.glfw.GLFW;
 
 public final class MonumentumClient implements ClientModInitializer {
   @Override
   public void onInitializeClient() {
+    MonumentumConfigScreen.registerCustomComponents();
     MessageRouter router = new MessageRouter();
     new ClientChannel(router).start();
 
@@ -52,7 +61,7 @@ public final class MonumentumClient implements ClientModInitializer {
     MonumentumApi.register(AbilityApi.class, AbilityService.create(router));
     MonumentumApi.register(StatusApi.class, StatusService.create(router));
     initShards(MinecraftClient.getInstance(), router);
-    StatusChangeCallback.EVENT.register(c -> LOGGER.info("[SPIKE] status {} {}", c.kind(), c.status()));
+    initFeatures();
   }
 
   private static ApiHost createHost(String baseUrlOverride, List<String> shardMirrors) {
@@ -115,5 +124,27 @@ public final class MonumentumClient implements ClientModInitializer {
               LOGGER.error("No shard data available", t);
               return null;
             });
+  }
+
+  private static void initFeatures() {
+    MonumentumHud hud = new MonumentumHud();
+    hud.startTicking();
+    Ticker ticker = new Ticker();
+    ticker.start();
+    Features.startAll(Monumentum.CONFIG, hud, ticker);
+
+    KeyBinding openHudEditor =
+        KeyBindingHelper.registerKeyBinding(
+            new KeyBinding(
+                "key.monumentum.hud_editor",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_UNKNOWN,
+                "key.categories.monumentum"));
+    ClientTickEvents.END_CLIENT_TICK.register(
+        client -> {
+          while (openHudEditor.wasPressed()) {
+            hud.openEditor();
+          }
+        });
   }
 }

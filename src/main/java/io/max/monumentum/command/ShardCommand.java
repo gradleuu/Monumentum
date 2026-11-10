@@ -2,6 +2,7 @@ package io.max.monumentum.command;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 
+import io.max.monumentum.Monumentum;
 import io.max.monumentum.api.shard.ShardApi;
 import io.max.monumentum.api.shard.ShardContext;
 import io.max.monumentum.api.shard.ShardId;
@@ -15,7 +16,7 @@ public final class ShardCommand {
     ClientCommandRegistrationCallback.EVENT.register(
         (dispatcher, registryAccess) ->
             dispatcher.register(
-                literal("monumentum")
+                literal(Monumentum.MOD_ID)
                     .then(
                         literal("shard")
                             .executes(

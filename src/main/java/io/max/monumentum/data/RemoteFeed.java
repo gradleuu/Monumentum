@@ -1,5 +1,6 @@
 package io.max.monumentum.data;
 
+import io.max.monumentum.Monumentum;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -29,7 +30,7 @@ public final class RemoteFeed implements Feed {
         HttpRequest.newBuilder(uri)
             .timeout(Duration.ofSeconds(10))
             .header("Accept", "application/json")
-            .header("User-Agent", "Monumentum")
+            .header("User-Agent", Monumentum.MOD_ID)
             .GET()
             .build();
 

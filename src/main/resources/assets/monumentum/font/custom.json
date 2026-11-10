@@ -10,6 +10,21 @@
       "type": "space"
     },
     {
+      "type": "bitmap",
+      "file": "monumentum:font/char.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": [
+        "\uEC00\uEC01\uEC02\uEC03\uEC04\uEC05\uEC06",
+        "\uEC07\uEC08\uEC09\uEC0A\uEC0B\uEC0C\uEC0D",
+        "\uEC0E\uEC0F\uEC10\uEC11\uEC12\uEC13\uEC14",
+        "\uEC15\uEC16\uEC17\uEC18\uEC19\uEC1A\uEC1B",
+        "\uEC1C\uEC1D\uEC1E\uEC1F\uEC20\uEC21\uEC22",
+        "\uEC23\uEC24\uEC25\uEC26\uEC27\uEC28\uEC29",
+        "\uEC2A\uEC2B\uEC2C\uEC2D\uEC2E\uEC2F\uEC30"
+      ]
+    },
+    {
       "type": "reference",
       "id": "minecraft:default"
     }
