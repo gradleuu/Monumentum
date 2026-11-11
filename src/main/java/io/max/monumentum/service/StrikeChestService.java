@@ -57,11 +57,9 @@ public final class StrikeChestService implements StrikeApi {
       set(StrikeChests.NONE);
       return;
     }
-    if (worldChanged) {
-      // always replaces the old numbers, never keeps them
-      set(takePending(current));
-    } else if (!chests.isKnown()) {
-      // for example the shard list just finished loading
+    if (worldChanged // always replaces the old numbers, never keeps them
+        || !chests.isKnown() // for example the shard list just finished loading
+    ) {
       set(takePending(current));
     }
   }

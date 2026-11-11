@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.17.20'
+    alias(libs.plugins.fabric.loom)
     id 'maven-publish'
 }
 
@@ -10,97 +10,91 @@ base {
     archivesName = project.archives_base_name
 }
 
-
 repositories {
     maven {
-        name 'Xander Maven'
-        url 'https://maven.isxander.dev/releases'
+        name = 'Xander Maven'
+        url = uri('https://maven.isxander.dev/releases')
     }
     maven {
-        url "https://maven.terraformersmc.com/"
-        content { includeGroup "com.terraformersmc" }
+        url = uri('https://maven.terraformersmc.com/')
+        content {
+            includeGroup('com.terraformersmc')
+        }
     }
     maven {
-        url "https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1"
-        content { includeGroup "me.djtheredstoner" }
+        url = uri('https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1')
+        content {
+            includeGroup('me.djtheredstoner')
+        }
     }
-    maven { url 'https://maven.wispforest.io/releases/' }
-    maven { url "https://maven.shedaniel.me/" }
-    maven { url 'https://jitpack.io' }
+    maven {
+        url = uri('https://maven.wispforest.io/releases/')
+    }
+    maven {
+        url = uri('https://maven.shedaniel.me/')
+    }
+    maven {
+        url = uri('https://jitpack.io')
+    }
     mavenCentral()
 }
 
-dependencies {
-    minecraft "com.mojang:minecraft:${libs.versions.minecraft.get()}"
-    mappings "net.fabricmc:yarn:${libs.versions.yarn.mappings.get()}:v2"
-    modRuntimeOnly libs.devauth.get()
+def owoVersion = libs.versions.owo.get()
 
-    modImplementation libs.fabric.loader.get()
-    modImplementation libs.fabric.api.get()
-    modImplementation libs.modmenu.get()
-    annotationProcessor modImplementation("io.wispforest:owo-lib:${libs.versions.owo.get()}")
-    modApi("me.shedaniel.cloth:cloth-config-fabric:13.0.138") {
-        exclude(group: "net.fabricmc.fabric-api")
-    }
-    include "io.wispforest:owo-sentinel:${libs.versions.owo.get()}"
+dependencies {
+    minecraft("com.mojang:minecraft:${libs.versions.minecraft.get()}")
+    mappings("net.fabricmc:yarn:${libs.versions.yarn.mappings.get()}:v2")
+
+    modRuntimeOnly(libs.devauth)
+    modImplementation(libs.fabric.loader)
+    modImplementation(libs.fabric.api)
+    modImplementation(libs.modmenu)
+    modImplementation("io.wispforest:owo-lib:${owoVersion}")
+
+    include("io.wispforest:owo-sentinel:${owoVersion}")
 }
 
-processResources {
-    inputs.property "version", project.version
-    inputs.property "minecraft_version", project.minecraft_version
-    inputs.property "loader_version", project.loader_version
-    filteringCharset "UTF-8"
+def resourceProperties = [
+        version: project.version,
+        minecraft_version: libs.versions.minecraft.get(),
+        loader_version: libs.versions.fabric.loader.get()
+]
 
-    filesMatching("fabric.mod.json") {
-        expand "version": project.version,
-                "minecraft_version": project.minecraft_version,
-                "loader_version": project.loader_version
+tasks.named('processResources') {
+    inputs.properties(resourceProperties)
+    filteringCharset = 'UTF-8'
+
+    filesMatching('fabric.mod.json') {
+        expand(resourceProperties)
     }
 }
 
 def targetJavaVersion = 17
+
 tasks.withType(JavaCompile).configureEach {
-    // ensure that the encoding is set to UTF-8, no matter what the system default is
-    // this fixes some edge cases with special characters not displaying correctly
-    // see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
-    // If Javadoc is generated, this must be specified in that task too.
-    it.options.encoding = "UTF-8"
-    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
-        it.options.release.set(targetJavaVersion)
-    }
+    options.encoding = 'UTF-8'
+    options.release.set(targetJavaVersion)
 }
 
 java {
-    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
-    if (JavaVersion.current() < javaVersion) {
+    if (JavaVersion.current() < JavaVersion.toVersion(targetJavaVersion)) {
         toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
     }
-    // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-    // if it is present.
-    // If you remove this line, sources will not be generated.
+
     withSourcesJar()
 }
 
-jar {
-    from("LICENSE") {
+tasks.named('jar') {
+    from('LICENSE') {
         rename { "${it}_${project.archives_base_name}" }
     }
 }
 
-// configure the maven publication
 publishing {
     publications {
-        create("mavenJava", MavenPublication) {
+        create('mavenJava', MavenPublication) {
             artifactId = project.archives_base_name
             from components.java
         }
-    }
-
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-    repositories {
-        // Add repositories to publish to here.
-        // Notice: This block does NOT have the same function as the block in the top level.
-        // The repositories here will be used for publishing your artifact, not for
-        // retrieving dependencies.
     }
 }

@@ -6,7 +6,9 @@ import java.net.URI;
 import org.jetbrains.annotations.Nullable;
 
 public final class ApiLocation {
-  public static final URI DEFAULT = URI.create("https://gradleuu.github.io/api/monumentum/");
+  public static final URI DEFAULT =
+          URI.create(
+                  "https://raw.githubusercontent.com/gradleuu/gradleuu.github.io/refs/heads/main/api/monumentum/");
 
   private ApiLocation() {}
 

@@ -15,15 +15,8 @@
   "accessWidener": "monumentum.accesswidener",
   "environment": "client",
   "entrypoints": {
-    "modmenu": [
-      "io.max.monumentum.config.MonumentumModMenu"
-    ],
-    "client": [
-      "io.max.monumentum.client.MonumentumClient"
-    ],
-    "main": [
-      "io.max.monumentum.Monumentum"
-    ]
+    "client": ["io.max.monumentum.client.MonumentumClient"],
+    "main": ["io.max.monumentum.Monumentum"]
   },
   "mixins": [
     "monumentum.mixins.json"

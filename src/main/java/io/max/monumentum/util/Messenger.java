@@ -1,6 +1,6 @@
 package io.max.monumentum.util;
 
-import io.max.monumentum.config.MonumentumConfig;
+import io.max.monumentum.Monumentum;
 import io.max.monumentum.util.font.Glyph;
 import net.minecraft.text.HoverEvent;
 import net.minecraft.text.Text;
@@ -35,7 +35,7 @@ public final class Messenger {
                   .styled(
                       style ->
                           style.withColor(
-                              Kaleidoscope.style(MonumentumConfig.monumentumMessageColour)
+                              Kaleidoscope.style(Monumentum.CONFIG.get().messageColour)
                                   .getColor()));
 
           player.sendMessage(

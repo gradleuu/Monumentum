@@ -3,6 +3,7 @@ package io.max.monumentum.feature;
 import static io.max.monumentum.Monumentum.LOGGER;
 
 import io.max.monumentum.Monumentum;
+import io.max.monumentum.config.FeatureOptions;
 import io.max.monumentum.hud.MonumentumHud;
 import io.max.monumentum.util.Ticker;
 import io.wispforest.owo.config.ConfigWrapper;
@@ -16,14 +17,14 @@ import net.minecraft.util.Identifier;
 public abstract class Feature {
   final String name;
   private final Identifier id;
-  private ConfigWrapper<?> config;
   private MonumentumHud hud;
   private Ticker ticker;
-  private Option<Boolean> turnedOnOption;
+  private final Supplier<? extends FeatureOptions> options;
   private volatile boolean brokenByError;
 
-  protected Feature(String name) {
+  protected Feature(String name, Supplier<? extends FeatureOptions> options) {
     this.name = name;
+    this.options = options;
     this.id = new Identifier(Monumentum.MOD_ID, name);
   }
 
@@ -32,30 +33,20 @@ public abstract class Feature {
   }
 
   public final boolean isTurnedOn() {
-    return turnedOnOption.value();
+    return options.get().enabled;
   }
 
   public final void setTurnedOn(boolean turnedOn) {
-    turnedOnOption.set(turnedOn);
+    Monumentum.CONFIG.edit(() -> options.get().enabled = turnedOn);
   }
 
   protected final MonumentumHud hud() {
     return hud;
   }
 
-  protected final <T> Option<T> savedOption(String optionName) {
-    Option<T> option = config.optionForKey(new Option.Key(name + "." + optionName));
-    if (option == null) {
-      throw new IllegalStateException("the config has no option " + name + "." + optionName);
-    }
-    return option;
-  }
-
-  final void startFeature(ConfigWrapper<?> config, MonumentumHud hud, Ticker ticker) {
-    this.config = config;
+  final void startFeature(MonumentumHud hud, Ticker ticker) {
     this.hud = hud;
     this.ticker = ticker;
-    turnedOnOption = savedOption("enabled");
     try {
       hook();
     } catch (RuntimeException e) {

@@ -15,7 +15,7 @@ import io.max.monumentum.api.shard.ShardApi;
 import io.max.monumentum.api.status.StatusApi;
 import io.max.monumentum.api.strike.StrikeApi;
 import io.max.monumentum.command.ShardCommand;
-import io.max.monumentum.config.screen.MonumentumConfigScreen;
+import io.max.monumentum.config.ApiOptions;
 import io.max.monumentum.data.ApiHost;
 import io.max.monumentum.data.ApiLocation;
 import io.max.monumentum.data.ShardCatalog;
@@ -51,7 +51,6 @@ import org.lwjgl.glfw.GLFW;
 public final class MonumentumClient implements ClientModInitializer {
   @Override
   public void onInitializeClient() {
-    MonumentumConfigScreen.registerCustomComponents();
     MessageRouter router = new MessageRouter();
     new ClientChannel(router).start();
 
@@ -100,8 +99,8 @@ public final class MonumentumClient implements ClientModInitializer {
   }
 
   private static void initShards(MinecraftClient mc, MessageRouter router) {
-    ApiHost host =
-        createHost(Monumentum.CONFIG.api.baseUrl(), Monumentum.CONFIG.api.shardMirrors());
+    ApiOptions api = Monumentum.CONFIG.get().api;
+    ApiHost host = createHost(api.baseUrl, api.shardMirrors);
     ShardCatalog catalog = new ShardCatalog(host, mc);
     WorldWatcher world = new WorldWatcher();
     LocationWatcher location = new LocationWatcher();
@@ -131,7 +130,7 @@ public final class MonumentumClient implements ClientModInitializer {
     hud.startTicking();
     Ticker ticker = new Ticker();
     ticker.start();
-    Features.startAll(Monumentum.CONFIG, hud, ticker);
+    Features.startAll(hud, ticker);
 
     KeyBinding openHudEditor =
         KeyBindingHelper.registerKeyBinding(

@@ -1,5 +1,6 @@
 package io.max.monumentum.feature.features;
 
+import io.max.monumentum.Monumentum;
 import io.max.monumentum.api.strike.StrikeApi;
 import io.max.monumentum.api.strike.StrikeChests;
 import io.max.monumentum.api.strike.event.StrikeChestsChangeCallback;
@@ -12,7 +13,7 @@ public final class StrikeChestsHudFeature extends OneLineTextHudFeature {
   private final StrikeApi strikeApi;
 
   public StrikeChestsHudFeature(StrikeApi strikeApi) {
-    super("strike_chests");
+    super("strike_chests", () -> Monumentum.CONFIG.get().strikeChests);
     this.strikeApi = strikeApi;
   }
 

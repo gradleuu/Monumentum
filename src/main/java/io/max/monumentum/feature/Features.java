@@ -13,19 +13,17 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 public final class Features {
-  private final ConfigWrapper<?> config;
   private final MonumentumHud hud;
   private final Ticker ticker;
   private final Set<String> usedNames = new HashSet<>();
 
-  private Features(ConfigWrapper<?> config, MonumentumHud hud, Ticker ticker) {
-    this.config = config;
+  private Features(MonumentumHud hud, Ticker ticker) {
     this.hud = hud;
     this.ticker = ticker;
   }
 
-  public static void startAll(ConfigWrapper<?> config, MonumentumHud hud, Ticker ticker) {
-    Features all = new Features(config, hud, ticker);
+  public static void startAll(MonumentumHud hud, Ticker ticker) {
+    Features all = new Features(hud, ticker);
 
     all.start(() -> new StrikeChestsHudFeature(MonumentumApi.strikes()));
     all.start(CrimsonContractSwitchReminderFeature::new);
@@ -43,7 +41,7 @@ public final class Features {
       if (!usedNames.add(feature.name)) {
         throw new IllegalStateException("the name " + feature.name + " is used twice");
       }
-      feature.startFeature(config, hud, ticker);
+      feature.startFeature(hud, ticker);
     } catch (RuntimeException | LinkageError e) {
       LOGGER.error("Feature {} can't be started", feature.name, e);
     }

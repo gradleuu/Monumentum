@@ -1,18 +1,18 @@
 package io.max.monumentum.feature;
 
+import io.max.monumentum.Monumentum;
+import io.max.monumentum.config.HudFeatureOptions;
 import io.max.monumentum.hud.HudPosition;
 import io.max.monumentum.hud.HudWidget;
-import io.wispforest.owo.config.Option;
+import java.util.function.Supplier;
 
 public abstract class HudFeature extends Feature implements HudWidget {
+  private final Supplier<? extends HudFeatureOptions> hudOptions;
   private volatile Runnable redrawRequest = () -> {};
-  private Option<Float> anchorX;
-  private Option<Float> anchorY;
-  private Option<Integer> offsetX;
-  private Option<Integer> offsetY;
 
-  protected HudFeature(String name) {
-    super(name);
+  protected HudFeature(String name, Supplier<? extends HudFeatureOptions> options) {
+    super(name, options);
+    this.hudOptions = options;
   }
 
   protected abstract boolean hasSomethingToShow();
@@ -25,10 +25,6 @@ public abstract class HudFeature extends Feature implements HudWidget {
 
   @Override
   protected final void hook() {
-    anchorX = savedOption("anchorX");
-    anchorY = savedOption("anchorY");
-    offsetX = savedOption("offsetX");
-    offsetY = savedOption("offsetY");
     hud().addWidget(this);
     listenForChanges();
   }
@@ -45,15 +41,20 @@ public abstract class HudFeature extends Feature implements HudWidget {
 
   @Override
   public final HudPosition position() {
-    return new HudPosition(anchorX.value(), anchorY.value(), offsetX.value(), offsetY.value());
+    HudFeatureOptions o = hudOptions.get();
+    return new HudPosition(o.anchorX, o.anchorY, o.offsetX, o.offsetY);
   }
 
   @Override
   public final void setPosition(HudPosition position) {
-    anchorX.set(position.anchorX());
-    anchorY.set(position.anchorY());
-    offsetX.set(position.offsetX());
-    offsetY.set(position.offsetY());
+    Monumentum.CONFIG.edit(
+            () -> {
+              HudFeatureOptions o = hudOptions.get();
+              o.anchorX = position.anchorX();
+              o.anchorY = position.anchorY();
+              o.offsetX = position.offsetX();
+              o.offsetY = position.offsetY();
+            });
   }
 
   @Override
